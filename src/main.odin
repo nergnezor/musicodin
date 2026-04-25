@@ -121,6 +121,8 @@ main :: proc() {
         DISPLAY_WIDTH :: f32(50.0)
         MAX_SEGMENTS  :: 800
 
+        PI :: f32(3.14159265)
+
         for t := 0; t < 4; t += 1 {
             wd := wdata[t]
             if wd == nil { continue }
@@ -130,24 +132,30 @@ main :: proc() {
             channels := wd.channels
             z := cast(f32)(t) * TRACK_SPACING
 
-            // Step large enough to stay well under raylib's batch limit
             step := frame_count / MAX_SEGMENTS
             if step < 1 { step = 1 }
 
-            // Scale x so the full waveform spans DISPLAY_WIDTH units
             x_scale := DISPLAY_WIDTH / cast(f32)(frame_count)
+
+            // Playhead X position for this track
+            t_dur := cast(f32)(frame_count) / cast(f32)(wd.sample_rate)
+            px := f32(0)
+            if t_dur > 0 {
+                px = (play_time / t_dur) * DISPLAY_WIDTH
+                px = raylib.Clamp(px, 0, DISPLAY_WIDTH)
+            }
+
+            // Color per track (animated hue)
+            hue := f32(t) * 90.0 + play_time * 20.0
+            color_r := u8(math.sin_f32(hue * PI / 180.0) * 100 + 155)
+            color_g := u8(math.sin_f32((hue + 120) * PI / 180.0) * 100 + 155)
+            color_b := u8(math.sin_f32((hue + 240) * PI / 180.0) * 100 + 155)
+            played_color   := raylib.Color{color_r, color_g, color_b, 230}
+            unplayed_color := raylib.Color{color_r / 4, color_g / 4, color_b / 4, 120}
 
             prev: raylib.Vector3
             first := true
             frame := 0
-
-            // Color per track
-            hue := f32(t) * 90.0 + play_time * 20.0
-            PI :: f32(3.14159265)
-            color_r := u8(math.sin_f32(hue * PI / 180.0) * 100 + 155)
-            color_g := u8(math.sin_f32((hue + 120) * PI / 180.0) * 100 + 155)
-            color_b := u8(math.sin_f32((hue + 240) * PI / 180.0) * 100 + 155)
-            line_color := raylib.Color{color_r, color_g, color_b, 220}
 
             for frame < frame_count {
                 sum := f32(0)
@@ -160,7 +168,8 @@ main :: proc() {
                 y := amp * 3.0
                 cur := raylib.Vector3{x, y, z}
                 if !first {
-                    raylib.DrawLine3D(prev, cur, line_color)
+                    seg_color := played_color if x <= px else unplayed_color
+                    raylib.DrawLine3D(prev, cur, seg_color)
                 }
                 prev = cur
                 first = false
@@ -169,6 +178,15 @@ main :: proc() {
 
             // Baseline
             raylib.DrawLine3D({0, 0, z}, {DISPLAY_WIDTH, 0, z}, {60, 60, 60, 120})
+
+            // Playhead: vertical bar + sphere
+            if t_dur > 0 {
+                raylib.DrawLine3D({px, -3.5, z}, {px,  3.5, z}, {255, 230, 60, 255})
+                raylib.DrawSphere({px, 0, z}, 0.3, {255, 230, 60, 255})
+                // Glow rings
+                raylib.DrawCircle3D({px, 0, z}, 0.5, {1,0,0}, 90, {255, 230, 60, 120})
+                raylib.DrawCircle3D({px, 0, z}, 0.7, {1,0,0}, 90, {255, 230, 60,  60})
+            }
         }
 
         raylib.EndMode3D()
