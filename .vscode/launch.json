@@ -1,0 +1,37 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		// {
+		// 	"name": "Run WaveViz",
+		// 	"type": "lldb",
+		// 	"request": "launch",
+		// 	"program": "${workspaceFolder}/waveviz",
+		// 	"args": [
+		// 		"${workspaceFolder}/../Music/tapes/salmonlake/track_1.ogg",
+		// 		"${workspaceFolder}/../Music/tapes/salmonlake/track_2.ogg",
+		// 		"${workspaceFolder}/../Music/tapes/salmonlake/track_3.ogg",
+		// 		"${workspaceFolder}/../Music/tapes/salmonlake/track_4.ogg"
+		// 	],
+		// 	"cwd": "${workspaceFolder}",
+		// 	"stopOnEntry": false,
+		// 	"console": "integratedTerminal",
+		// 	"preLaunchTask": "build-odin"
+		// },
+		{
+			"name": "Build & Run WaveViz",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/waveviz",
+			// "preLaunchTask": "build-dll-only",
+			"args": [
+				"${workspaceFolder}/../Music/tapes/salmonlake/track_1.ogg",
+				"${workspaceFolder}/../Music/tapes/salmonlake/track_2.ogg",
+				"${workspaceFolder}/../Music/tapes/salmonlake/track_3.ogg",
+				"${workspaceFolder}/../Music/tapes/salmonlake/track_4.ogg"
+			],
+			"cwd": "${workspaceFolder}",
+			"stopOnEntry": false,
+			"console": "integratedTerminal"
+		}
+	]
+}

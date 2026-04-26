@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build-hot-reload",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"${workspaceFolder}/build_hot_reload.sh"
+			],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "build-dll-only",
+			"type": "shell",
+			"command": "odin",
+			"args": [
+				"build",
+				"${workspaceFolder}/game",
+				"-build-mode:shared",
+				"-out:${workspaceFolder}/build/hot_reload/game.so"
+			],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
