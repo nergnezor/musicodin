@@ -192,7 +192,7 @@ game_update :: proc() {
     status_text  : cstring = g.is_playing ? "PLAYING" : "STOPPED"
     status_color := g.is_playing ? rl.Color{100, 255, 100, 255} : rl.Color{255, 100, 100, 255}
     rl.DrawText(status_text,                       15, 15, 18, status_color)
-    rl.DrawText("SPACE: play/stop  |  ESC: exit  |  F5: hot reload", 15, 40, 14, {140, 140, 140, 255})
+    rl.DrawText("SPACE: play/stop  |  ESC: exit", 15, 40, 14, {140, 140, 140, 255})
 
     rl.BeginMode3D(camera)
 
